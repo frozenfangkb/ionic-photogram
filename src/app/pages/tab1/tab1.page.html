@@ -11,4 +11,8 @@
 
 <ion-content [fullscreen]="true" color="light" class="ion-padding">
   <app-posts [posts]="posts"></app-posts>
+  <ion-infinite-scroll threshold="150px" position="bottom" (ionInfinite)="loadMoreData($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

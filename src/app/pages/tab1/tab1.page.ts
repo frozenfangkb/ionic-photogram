@@ -13,8 +13,18 @@ export class Tab1Page implements OnInit {
   constructor(private postsService: PostsService) {}
 
   ngOnInit(): void {
+    this.loadMoreData();
+  }
+
+  loadMoreData(event?): void {
     this.postsService.getPosts().subscribe((res: PostsPaginatedResponse) => {
       this.posts.push(...(res.posts ?? []));
+      if (event) {
+        event.target.complete();
+        if (res.posts.length === 0) {
+          event.target.disabled = true;
+        }
+      }
     });
   }
 }
