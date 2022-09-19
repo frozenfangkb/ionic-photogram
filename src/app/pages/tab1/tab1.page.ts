@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PostsService } from '../../services/posts.service';
-import { PostsPaginatedResponse } from '../../../models/Post';
+import { Post, PostsPaginatedResponse } from '../../../models/Post';
 
 @Component({
   selector: 'app-tab1',
@@ -8,11 +8,13 @@ import { PostsPaginatedResponse } from '../../../models/Post';
   styleUrls: ['tab1.page.scss'],
 })
 export class Tab1Page implements OnInit {
+  posts: Post[] = [];
+
   constructor(private postsService: PostsService) {}
 
   ngOnInit(): void {
     this.postsService.getPosts().subscribe((res: PostsPaginatedResponse) => {
-      console.log(res);
+      this.posts.push(...(res.posts ?? []));
     });
   }
 }
