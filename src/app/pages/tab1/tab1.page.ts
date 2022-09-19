@@ -9,6 +9,7 @@ import { Post, PostsPaginatedResponse } from '../../../models/Post';
 })
 export class Tab1Page implements OnInit {
   posts: Post[] = [];
+  scrollDisabled = false;
 
   constructor(private postsService: PostsService) {}
 
@@ -16,15 +17,23 @@ export class Tab1Page implements OnInit {
     this.loadMoreData();
   }
 
-  loadMoreData(event?): void {
-    this.postsService.getPosts().subscribe((res: PostsPaginatedResponse) => {
-      this.posts.push(...(res.posts ?? []));
-      if (event) {
-        event.target.complete();
-        if (res.posts.length === 0) {
-          event.target.disabled = true;
+  loadMoreData(event?, pull = false): void {
+    this.postsService
+      .getPosts(pull)
+      .subscribe((res: PostsPaginatedResponse) => {
+        this.posts.push(...(res.posts ?? []));
+        if (event) {
+          event.target.complete();
+          if (res.posts.length === 0) {
+            this.scrollDisabled = true;
+          }
         }
-      }
-    });
+      });
+  }
+
+  doRefresh(event): void {
+    this.posts = [];
+    this.scrollDisabled = false;
+    this.loadMoreData(event, true);
   }
 }

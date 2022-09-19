@@ -14,7 +14,10 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(): Observable<PostsPaginatedResponse> {
+  getPosts(reset = false): Observable<PostsPaginatedResponse> {
+    if (reset) {
+      this.postsPage = 0;
+    }
     this.postsPage += 1;
 
     return this.http.get<PostsPaginatedResponse>(
