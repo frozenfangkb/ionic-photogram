@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { IonSlides } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage implements OnInit, AfterViewInit {
+  @ViewChild('mainSlider') mainSlider: IonSlides;
+
   avatars = [
     {
       img: 'av-1.png',
@@ -50,6 +53,10 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
+  ngAfterViewInit(): void {
+    this.mainSlider.lockSwipes(true);
+  }
+
   login(fLogin: NgForm): void {
     console.log(fLogin.valid);
   }
@@ -61,5 +68,17 @@ export class LoginPage implements OnInit {
   selectAvatar(avatar): void {
     this.avatars.forEach((av) => (av.seleccionado = false));
     avatar.seleccionado = true;
+  }
+
+  showLogin(): void {
+    this.mainSlider.lockSwipes(false);
+    this.mainSlider.slideTo(0);
+    this.mainSlider.lockSwipes(true);
+  }
+
+  showRegister(): void {
+    this.mainSlider.lockSwipes(false);
+    this.mainSlider.slideTo(1);
+    this.mainSlider.lockSwipes(true);
   }
 }
