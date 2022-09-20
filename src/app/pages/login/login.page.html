@@ -14,7 +14,12 @@
               <ion-list>
                 <ion-item>
                   <ion-label>Email</ion-label>
-                  <ion-input name="email" type="email" required></ion-input>
+                  <ion-input
+                    name="email"
+                    type="email"
+                    [(ngModel)]="loginUser.email"
+                    required
+                  ></ion-input>
                 </ion-item>
 
                 <ion-item>
@@ -23,6 +28,7 @@
                     name="password"
                     type="password"
                     required
+                    [(ngModel)]="loginUser.password"
                   ></ion-input>
                 </ion-item>
               </ion-list>
