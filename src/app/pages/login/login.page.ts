@@ -70,15 +70,9 @@ export class LoginPage implements OnInit, AfterViewInit {
     avatar.seleccionado = true;
   }
 
-  showLogin(): void {
+  changeScreen(index: number): void {
     this.mainSlider.lockSwipes(false);
-    this.mainSlider.slideTo(0);
-    this.mainSlider.lockSwipes(true);
-  }
-
-  showRegister(): void {
-    this.mainSlider.lockSwipes(false);
-    this.mainSlider.slideTo(1);
+    this.mainSlider.slideTo(index);
     this.mainSlider.lockSwipes(true);
   }
 }
