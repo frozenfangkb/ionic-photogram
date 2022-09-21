@@ -13,45 +13,6 @@ import { User } from '../../../models/User';
 export class LoginPage implements OnInit, AfterViewInit {
   @ViewChild('mainSlider') mainSlider: IonSlides;
 
-  avatars = [
-    {
-      img: 'av-1.png',
-      seleccionado: true,
-    },
-    {
-      img: 'av-2.png',
-      seleccionado: false,
-    },
-    {
-      img: 'av-3.png',
-      seleccionado: false,
-    },
-    {
-      img: 'av-4.png',
-      seleccionado: false,
-    },
-    {
-      img: 'av-5.png',
-      seleccionado: false,
-    },
-    {
-      img: 'av-6.png',
-      seleccionado: false,
-    },
-    {
-      img: 'av-7.png',
-      seleccionado: false,
-    },
-    {
-      img: 'av-8.png',
-      seleccionado: false,
-    },
-  ];
-
-  avatarSlide = {
-    slidesPerView: 3.5,
-  };
-
   loginUser = {
     email: '',
     password: '',
@@ -102,11 +63,6 @@ export class LoginPage implements OnInit, AfterViewInit {
     } else {
       this.uiService.infoAlert('That email already exists');
     }
-  }
-
-  selectAvatar(avatar): void {
-    this.avatars.forEach((av) => (av.seleccionado = false));
-    avatar.seleccionado = true;
   }
 
   changeScreen(index: number): void {
