@@ -1,9 +1,10 @@
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Storage } from '@ionic/storage-angular';
-import { TokenResponse } from '../../models/ApiResponse';
+import { ApiResponse, TokenResponse } from '../../models/ApiResponse';
 import { User } from 'src/models/User';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,13 @@ import { User } from 'src/models/User';
 export class UserService {
   storage: Storage = null;
   token: string = null;
+  user: User = {} as User;
 
-  constructor(private http: HttpClient, private storageMod: Storage) {
+  constructor(
+    private http: HttpClient,
+    private storageMod: Storage,
+    private navCtrl: NavController
+  ) {
     this.init();
   }
 
@@ -59,6 +65,40 @@ export class UserService {
   async saveToken(newToken: string): Promise<void> {
     this.token = newToken;
     await this.storage.set('token', newToken);
+  }
+
+  async loadToken(): Promise<void> {
+    if (!this.storage) {
+      this.storage = await this.storageMod.create();
+    }
+    this.token = (await this.storage.get('token')) || null;
+  }
+
+  async verifyToken(): Promise<boolean> {
+    await this.loadToken();
+
+    if (!this.token) {
+      this.navCtrl.navigateRoot('/login');
+      return Promise.resolve(false);
+    }
+
+    return new Promise<boolean>((resolve) => {
+      const headers = new HttpHeaders({
+        authorization: `Bearer ${this.token}`,
+      });
+
+      this.http
+        .get<ApiResponse>(`${environment.apiUrl}/user`, { headers })
+        .subscribe((res) => {
+          if (res.ok) {
+            this.user = res.user;
+            resolve(true);
+          } else {
+            this.navCtrl.navigateRoot('/login');
+            resolve(false);
+          }
+        });
+    });
   }
 
   private clearState(): void {
