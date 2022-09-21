@@ -3,7 +3,11 @@
     <ion-title> Nuevo Post </ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="createPost()" color="primary">
+      <ion-button
+        (click)="createPost()"
+        [disabled]="post.message.length < 1"
+        color="primary"
+      >
         Compartir
       </ion-button>
     </ion-buttons>
@@ -14,7 +18,7 @@
   <ion-list>
     <ion-item>
       <ion-label position="floating">Mensaje</ion-label>
-      <ion-textarea></ion-textarea>
+      <ion-textarea [(ngModel)]="post.message"></ion-textarea>
     </ion-item>
 
     <ion-list>

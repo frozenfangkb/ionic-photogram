@@ -15,6 +15,9 @@ export class Tab1Page implements OnInit {
 
   ngOnInit(): void {
     this.loadMoreData();
+    this.postsService.newPost.subscribe((post) => {
+      this.posts.unshift(post);
+    });
   }
 
   loadMoreData(event?, pull = false): void {

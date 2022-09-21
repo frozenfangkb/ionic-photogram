@@ -1,11 +1,11 @@
 import { User } from './User';
 
 export interface Post {
-  createdAt: Date;
+  createdAt?: Date;
   message: string;
-  img: string[];
-  coords: string;
-  user: User;
+  img?: string[];
+  coords?: string;
+  user?: User;
 }
 
 export interface PostsPaginatedResponse {

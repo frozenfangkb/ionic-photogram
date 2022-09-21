@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PostsPaginatedResponse } from '../../models/Post';
+import { Post, PostsPaginatedResponse } from '../../models/Post';
+import { UserService } from './user.service';
+import { ApiResponse } from '../../models/ApiResponse';
 
 const apiUrl = environment.apiUrl;
 
@@ -11,8 +13,9 @@ const apiUrl = environment.apiUrl;
 })
 export class PostsService {
   postsPage = 0;
+  newPost = new EventEmitter<Post>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private userService: UserService) {}
 
   getPosts(reset = false): Observable<PostsPaginatedResponse> {
     if (reset) {
@@ -23,5 +26,25 @@ export class PostsService {
     return this.http.get<PostsPaginatedResponse>(
       `${apiUrl}/post/?page=${this.postsPage}`
     );
+  }
+
+  createPost(post: Post): Promise<boolean> {
+    return new Promise((resolve) => {
+      const headers = new HttpHeaders({
+        authorization: `Bearer ${this.userService.token}`,
+      });
+
+      this.http
+        .post<ApiResponse>(`${environment.apiUrl}/post`, post, { headers })
+        .subscribe((res) => {
+          if (!res.ok) {
+            console.error(res.error);
+            resolve(false);
+          } else {
+            this.newPost.emit(res.post);
+            resolve(true);
+          }
+        });
+    });
   }
 }
