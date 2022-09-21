@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/models/User';
 import { UserService } from '../../services/user.service';
+import { NgForm } from '@angular/forms';
+import { UiService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-tab3',
@@ -10,10 +12,25 @@ import { UserService } from '../../services/user.service';
 export class Tab3Page implements OnInit {
   user: User = {} as User;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private uiService: UiService) {}
 
   ngOnInit(): void {
     this.user = this.userService.getUser();
+  }
+
+  async updateUser(fUserData: NgForm): Promise<void> {
+    if (fUserData.invalid) {
+      return;
+    }
+
+    if (await this.userService.updateUser(this.user)) {
+      this.uiService.sendToastMessage('bottom', 'User updated successfully');
+    } else {
+      this.uiService.sendToastMessage(
+        'bottom',
+        'There was an error updating the user'
+      );
+    }
   }
 
   logout() {}

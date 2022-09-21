@@ -109,6 +109,28 @@ export class UserService {
     });
   }
 
+  updateUser(user: User): Promise<boolean> {
+    return new Promise((resolve) => {
+      const headers = new HttpHeaders({
+        authorization: `Bearer ${this.token}`,
+      });
+
+      this.http
+        .put<TokenResponse>(`${environment.apiUrl}/user/update`, user, {
+          headers,
+        })
+        .subscribe(async (res) => {
+          if (!res.ok) {
+            console.error(res.error);
+            resolve(false);
+          } else {
+            await this.saveToken(res.token);
+            resolve(true);
+          }
+        });
+    });
+  }
+
   private clearState(): void {
     this.token = null;
     this.storage.clear();

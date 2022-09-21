@@ -25,7 +25,7 @@
 
   <app-avatar-selector></app-avatar-selector>
 
-  <form>
+  <form (ngSubmit)="updateUser(fUserData)" #fUserData="ngForm">
     <ion-row class="top-20">
       <ion-col>
         <ion-list>
