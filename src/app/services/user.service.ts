@@ -53,6 +53,13 @@ export class UserService {
     });
   }
 
+  logout(): void {
+    this.clearState();
+    this.user = null;
+
+    this.navCtrl.navigateRoot('/login', { animated: true });
+  }
+
   register(user: User): Promise<boolean> {
     return new Promise((resolve) => {
       this.http
@@ -73,6 +80,7 @@ export class UserService {
   async saveToken(newToken: string): Promise<void> {
     this.token = newToken;
     await this.storage.set('token', newToken);
+    await this.verifyToken();
   }
 
   async loadToken(): Promise<void> {

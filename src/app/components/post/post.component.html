@@ -1,20 +1,32 @@
 <div class="post">
   <ion-item lines="none">
     <ion-avatar slot="start">
-      <img src="/assets/avatars/{{post.user.avatar}}" />
+      <img src="/assets/avatars/{{ post.user.avatar }}" />
     </ion-avatar>
     <ion-label>
-      <h3>{{post.user.name}}</h3>
-      <h5>{{post.user.email}}</h5>
+      <h3>{{ post.user.name }}</h3>
+      <h5>{{ post.user.email }}</h5>
     </ion-label>
   </ion-item>
 
-  <ion-slides pager="true">
-    <ion-slide class="image-slide" [style]="'/assets/perro-1.jpg' | domSanitizer">
+  <ion-slides pager="true" *ngIf="post.img.length > 1">
+    <ion-slide
+      *ngFor="let item of post.img"
+      class="image-slide"
+      [style]="item | image: post.user._id | domSanitizer"
+    >
     </ion-slide>
-    <ion-slide class="image-slide" style="background-image: url('/assets/perro-2.jpg');">
-    </ion-slide>
-    <ion-slide class="image-slide" style="background-image: url('/assets/perro-3.jpg');">
+  </ion-slides>
+
+  <ion-slides
+    pager="false"
+    *ngIf="post.img.length === 1"
+    [options]="slideSoloOpts"
+  >
+    <ion-slide
+      class="image-slide"
+      [style]="post.img[0] | image: post.user._id | domSanitizer"
+    >
     </ion-slide>
   </ion-slides>
 
@@ -24,6 +36,6 @@
   </ion-item>
 
   <ion-item lines="none">
-    <ion-label text-wrap>{{post.message}}</ion-label>
+    <ion-label text-wrap>{{ post.message }}</ion-label>
   </ion-item>
 </div>

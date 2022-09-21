@@ -9,6 +9,11 @@ import { Post } from 'src/models/Post';
 export class PostComponent implements OnInit {
   @Input() post: Post = {} as Post;
 
+  slideSoloOpts = {
+    allowSlideNext: false,
+    allowSlidePrev: false,
+  };
+
   constructor() {}
 
   ngOnInit() {}

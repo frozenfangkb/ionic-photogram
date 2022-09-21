@@ -5,6 +5,11 @@ import { environment } from 'src/environments/environment';
 import { Post, PostsPaginatedResponse } from '../../models/Post';
 import { UserService } from './user.service';
 import { ApiResponse } from '../../models/ApiResponse';
+import {
+  FileUploadOptions,
+  FileTransfer,
+  FileTransferObject,
+} from '@awesome-cordova-plugins/file-transfer/ngx';
 
 const apiUrl = environment.apiUrl;
 
@@ -15,7 +20,11 @@ export class PostsService {
   postsPage = 0;
   newPost = new EventEmitter<Post>();
 
-  constructor(private http: HttpClient, private userService: UserService) {}
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private fileTransfer: FileTransfer
+  ) {}
 
   getPosts(reset = false): Observable<PostsPaginatedResponse> {
     if (reset) {
@@ -46,5 +55,23 @@ export class PostsService {
           }
         });
     });
+  }
+
+  uploadImage(img: string) {
+    const options: FileUploadOptions = {
+      fileKey: 'image',
+      headers: {
+        authorization: `Bearer ${this.userService.token}`,
+      },
+    };
+
+    const fileTransfer: FileTransferObject = this.fileTransfer.create();
+
+    fileTransfer
+      .upload(img, `${environment.apiUrl}/post/upload`, options)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => console.error(err));
   }
 }
