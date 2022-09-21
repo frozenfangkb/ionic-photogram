@@ -3,6 +3,7 @@ import { Post } from 'src/models/Post';
 import { PostsService } from '../../services/posts.service';
 import { UiService } from '../../services/ui.service';
 import { NavController } from '@ionic/angular';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 
 @Component({
   selector: 'app-tab2',
@@ -11,6 +12,8 @@ import { NavController } from '@ionic/angular';
 })
 export class Tab2Page {
   tempImages: string[] = [];
+  position = false;
+  loadingGeo = false;
   post: Post = {
     message: '',
   };
@@ -18,7 +21,8 @@ export class Tab2Page {
   constructor(
     private postsService: PostsService,
     private uiService: UiService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private geoLocation: Geolocation
   ) {}
 
   async createPost(): Promise<void> {
@@ -34,5 +38,23 @@ export class Tab2Page {
         'There was an error publishing your post'
       );
     }
+  }
+
+  getGeo() {
+    if (!this.position) {
+      this.post.coords = null;
+      return;
+    }
+    this.loadingGeo = true;
+
+    this.geoLocation
+      .getCurrentPosition()
+      .then((resp) => {
+        this.post.coords = `${resp.coords.latitude}, ${resp.coords.longitude}`;
+        this.loadingGeo = false;
+      })
+      .catch((error) => {
+        this.loadingGeo = false;
+      });
   }
 }
