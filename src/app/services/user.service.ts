@@ -12,7 +12,7 @@ import { NavController } from '@ionic/angular';
 export class UserService {
   storage: Storage = null;
   token: string = null;
-  user: User = {} as User;
+  private user: User = {} as User;
 
   constructor(
     private http: HttpClient,
@@ -24,6 +24,14 @@ export class UserService {
 
   async init(): Promise<void> {
     this.storage = await this.storageMod.create();
+  }
+
+  getUser(): User {
+    // eslint-disable-next-line no-underscore-dangle
+    if (!this.user._id) {
+      this.verifyToken();
+    }
+    return { ...this.user };
   }
 
   login(email: string, password: string): Promise<boolean> {
